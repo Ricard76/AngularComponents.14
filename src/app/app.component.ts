@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild, AfterContentInit, ViewChildren, QueryList, ChangeDetectorRef, ElementRef, Renderer2, ViewContainerRef, ComponentFactoryResolver, ComponentRef } from '@angular/core';
+import { AfterViewInit, Component, ViewChild, AfterContentInit, ElementRef, Renderer2, ViewContainerRef, ComponentRef } from '@angular/core';
 import { SimpleAlertViewComponent } from './simple-alert-view/simple-alert-view.component';
 
 @Component({
@@ -18,7 +18,6 @@ export class AppComponent implements AfterViewInit, AfterContentInit{
 
   constructor(
     private renderer: Renderer2,
-    private resolver: ComponentFactoryResolver
   ) {
     this.timers = [3, 20, 185];
   }
@@ -48,8 +47,9 @@ export class AppComponent implements AfterViewInit, AfterContentInit{
   }
 
   public showEndTimerAlert(){
-    const alertFactory = this.resolver.resolveComponentFactory( SimpleAlertViewComponent );
-    this.simpleAlert = this.alertContainer.createComponent( alertFactory ); 
+   // DEPRECATED!!! const alertFactory = this.resolver.resolveComponentFactory( SimpleAlertViewComponent );
+   // DEPRECATED!!! this.simpleAlert = this.alertContainer.createComponent( alertFactory );
+    this.simpleAlert = this.alertContainer.createComponent( SimpleAlertViewComponent );
     this.simpleAlert.instance.title = 'Timer ended';
     this.simpleAlert.instance.message = 'Your coutdown has finished';
     this.simpleAlert.instance.onDismiss.subscribe(()=>{
