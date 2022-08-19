@@ -14,18 +14,17 @@
         <button (click)="hideAddTimer()" class="cancel-button">Cancel</button>
         <button (click)="submitAddtimer()" >Ok</button>
       </app-alert-view>
-    
-      <app-alert-view [hidden]="!isEndTimerVisible" >
-        <div class="header" header>Timer ended</div>
-        <div>Your countdown has finish</div>
-        <button (click)="hideEndTimerAlert()">OK</button>
-      </app-alert-view>
 
     </app-tab>
     <app-tab title="Chrono"> Chrono not available </app-tab>
     <app-tab title="Alarm"> Alarm not available </app-tab>
   </app-tabs>
 
-  <app-simple-alert-view>holas</app-simple-alert-view>
+  <app-simple-alert-view
+    title="TimerEnded"
+    message="Your countdown has finished">
+  </app-simple-alert-view>
+
+  <app-simple-alert-view></app-simple-alert-view>
 
 </div>
