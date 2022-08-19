@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild, AfterContentInit, ViewChildren, QueryList, ChangeDetectorRef, ElementRef, Renderer2 } from '@angular/core';
+import { AfterViewInit, Component, ViewChild, AfterContentInit, ViewChildren, QueryList, ChangeDetectorRef, ElementRef, Renderer2, ViewContainerRef, ComponentFactoryResolver, ComponentRef } from '@angular/core';
 import { SimpleAlertViewComponent } from './simple-alert-view/simple-alert-view.component';
 
 @Component({
@@ -6,20 +6,23 @@ import { SimpleAlertViewComponent } from './simple-alert-view/simple-alert-view.
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements AfterViewInit{
+export class AppComponent implements AfterViewInit, AfterContentInit{
 
   public isAddTimerVisible: boolean = false;
   public time: number = 0;
   public timers: Array<number> = [];
+  public simpleAlert: ComponentRef<SimpleAlertViewComponent> = null;
 
-  @ViewChildren(SimpleAlertViewComponent) alerts: QueryList<SimpleAlertViewComponent>;
   @ViewChild("timerInput") timeInput: ElementRef;
+  @ViewChild("alert", {read: ViewContainerRef}) alertContainer: ViewContainerRef;
 
   constructor(
-    private cdRef: ChangeDetectorRef,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private resolver: ComponentFactoryResolver
   ) {
     this.timers = [3, 20, 185];
+  }
+  ngAfterContentInit(): void {
   }
 
   ngAfterViewInit(){
@@ -27,15 +30,6 @@ export class AppComponent implements AfterViewInit{
     console.log(this.timeInput);
     this.renderer.setAttribute(this.timeInput.nativeElement, 'placeholder', 'enter seconds');
     this.renderer.addClass(this.timeInput.nativeElement, 'time-in');
-    
-    this.alerts.forEach((item)=> {
-      console.log( item );
-      if (!item.title){
-        item.title = 'Hi!';
-        item.message = 'Hello world';
-      }
-    });
-    this.cdRef.detectChanges();
   }
 
   logCountdownEnd(){
@@ -54,7 +48,14 @@ export class AppComponent implements AfterViewInit{
   }
 
   public showEndTimerAlert(){
-    this.alerts.first.show();
+    const alertFactory = this.resolver.resolveComponentFactory( SimpleAlertViewComponent );
+    this.simpleAlert = this.alertContainer.createComponent( alertFactory ); 
+    this.simpleAlert.instance.title = 'Timer ended';
+    this.simpleAlert.instance.message = 'Your coutdown has finished';
+    this.simpleAlert.instance.onDismiss.subscribe(()=>{
+      this.simpleAlert.destroy();
+    })
+    this.simpleAlert.instance.show();
   }
 
   public submitAddtimer(){
