@@ -3,4 +3,15 @@
   <app-timer (onComplete)="logCountdownEnd()" init="3"></app-timer>
   <app-timer init="43"></app-timer>
   <app-timer init="123"></app-timer>
+
+  <button class="add" (click)="showAddTimer()">+</button>
+  <app-alert-view 
+    [hidden]="!isAddTimerVisible"
+    (onCancel)="hideAddTimer()"
+    (onSubmit)="hideAddTimer()" >
+
+  <label>Set the number of seconds for your timer</label>
+      <input [(ngModel)]="time" type="number">
+  </app-alert-view>
+
 </div>
