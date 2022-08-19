@@ -29,7 +29,7 @@ export class TimerService{
         if(this.init && this.init >0){
           this.paused = true;
           this.clearTimeout();
-          this.countdownSource.next( init );
+          this.countdownSource.next( this.init );
         }
       }
     

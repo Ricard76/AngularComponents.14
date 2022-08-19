@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, ChangeDetectionStrategy, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Subject } from 'rxjs';
 import { TimerService } from './timer.service';
@@ -8,6 +8,8 @@ import { TimerService } from './timer.service';
   templateUrl: './timer.component.html',
   styleUrls: ['./timer.component.scss'], 
   providers: [TimerService],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.Emulated
 })
 export class TimerComponent implements OnInit, OnDestroy {
 
@@ -23,7 +25,10 @@ export class TimerComponent implements OnInit, OnDestroy {
     return (this.init - (this.countdown)) / this.init * 100;
   }
 
-  constructor( public timer: TimerService ) { }
+  constructor( 
+    public timer: TimerService,
+    private cdref: ChangeDetectorRef
+   ) { }
 
   ngOnInit(): void {
     this.timer.restartCountdown( this.init );
@@ -35,6 +40,7 @@ export class TimerComponent implements OnInit, OnDestroy {
 
     this.countdownSubscription = this.timer.countdown$.subscribe(( data )=>{
       this.countdown = data;
+      this.cdref.markForCheck();
     });
   }
 
